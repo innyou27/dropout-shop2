@@ -510,10 +510,11 @@
         const allRows = parseCSV(text);
         if (allRows.length === 0) throw new Error('Таблица пустая');
 
-        // Ищем строку заголовков (с словам "Товар")
+        // Ищем строку заголовков (ищем слово "продукт" или "товар")
         let headerRowIndex = -1;
         for (let i = 0; i < Math.min(allRows.length, 5); i++) {
-          if (allRows[i].join(' ').toLowerCase().includes('товар')) {
+          const joined = allRows[i].join(' ').toLowerCase();
+          if (joined.includes('продукт') || joined.includes('товар')) {
             headerRowIndex = i;
             break;
           }
@@ -522,14 +523,16 @@
 
         const headerRow = allRows[headerRowIndex].map(function(h) { return h.trim().toLowerCase(); });
 
-        // Находим колонки по названиям (работает даже с пустой колонкой A)
-        const idxProduct = headerRow.findIndex(function(h) { return h.includes('товар'); });
+        // Находим колонки по названиям из твоей таблицы:
+        // "Продукт", "Категория", "Цена", "stock_status", "stock_label"
+        const idxProduct = headerRow.findIndex(function(h) { return h.includes('продукт') || h.includes('товар'); });
         const idxCategory = headerRow.findIndex(function(h) { return h.includes('катег'); });
         const idxPrice = headerRow.findIndex(function(h) { return h.includes('цена'); });
-        const idxStock = headerRow.findIndex(function(h) { return h.includes('остат'); });
+        const idxStatus = headerRow.findIndex(function(h) { return h.includes('stock_status'); });
+        const idxLabel = headerRow.findIndex(function(h) { return h.includes('stock_label'); });
 
         if (idxProduct === -1 || idxPrice === -1) {
-          throw new Error('Не найдены колонки "Товар" или "Цена"');
+          throw new Error('Не найдены колонки "Продукт" или "Цена"');
         }
 
         const dataRows = allRows.slice(headerRowIndex + 1);
@@ -541,26 +544,32 @@
           const product = (row[idxProduct] || '').trim();
           if (product === '') return; // пропускаем пустые строки
 
-          const category = idxCategory !== -1 ? (row[idxCategory] || '').trim() : '';
           const priceRaw = (row[idxPrice] || '').trim();
-          const stockText = idxStock !== -1 ? (row[idxStock] || '').trim() : 'Много';
+          const statusRaw = idxStatus !== -1 ? (row[idxStatus] || '').trim().toLowerCase() : '';
+          let label = idxLabel !== -1 ? (row[idxLabel] || '').trim() : '';
+          if (label === '') label = (statusRaw === 'low') ? 'Мало' : 'Много';
 
           const price = parseFloat(priceRaw.replace(/[^0-9.,]/g, '').replace(',', '.')) || 0;
-          const isLow = stockText.toLowerCase().includes('мало');
-          const statusClass = isLow ? 'status-low' : 'status-in';
+
+          // Цвет берём из stock_status: "in" — зелёный, "low" — жёлтый
+          const statusClass = (statusRaw === 'low') ? 'status-low' : 'status-in';
           const priceFormatted = price.toLocaleString('ru-RU');
 
-          // Строка-разделитель категории (как в старом дизайне)
-          if (category && category !== lastCategory) {
-            html += '<tr class="cat-header-row"><td colspan="5">' + escapeHtml(category) + '</td></tr>';
-            lastCategory = category;
+          // Категория: если ячейка пустая — используем категорию предыдущего товара
+          const category = idxCategory !== -1 ? (row[idxCategory] || '').trim() : '';
+          const effectiveCategory = category || lastCategory;
+
+          // Строка-разделитель категории выводится один раз при смене
+          if (effectiveCategory && effectiveCategory !== lastCategory) {
+            html += '<tr class="cat-header-row"><td colspan="5">' + escapeHtml(effectiveCategory) + '</td></tr>';
+            lastCategory = effectiveCategory;
           }
 
           html += '<tr class="table-row-item" style="animation-delay: ' + (delay * 0.1).toFixed(1) + 's;">'
             + '<td>' + escapeHtml(product) + '</td>'
-            + '<td>' + escapeHtml(category) + '</td>'
+            + '<td>' + escapeHtml(effectiveCategory || '') + '</td>'
             + '<td>' + priceFormatted + ' ₽</td>'
-            + '<td><span class="status-badge ' + statusClass + '">' + escapeHtml(stockText) + '</span></td>'
+            + '<td><span class="status-badge ' + statusClass + '">' + escapeHtml(label) + '</span></td>'
             + '<td><button class="book-btn" onclick="sendToTg(\'' + escapeHtml(product).replace(/'/g, "\\'") + '\', ' + price + ')">Забронировать</button></td>'
             + '</tr>';
 
@@ -568,7 +577,7 @@
         });
 
         if (html === '') {
-          container.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:3rem; color:var(--muted)">В таблице нет товаров. Добавь их в Google Таблицу под строкой заголовков.</td></tr>';
+          container.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:3rem; color:var(--muted)">В таблице нет товаров. Добавь их под строкой заголовков.</td></tr>';
         } else {
           container.innerHTML = html;
         }
@@ -578,7 +587,7 @@
         container.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:3rem;">'
           + '<h3 style="color:var(--accent); margin-bottom:10px;">Ошибка загрузки товаров</h3>'
           + '<p style="color:var(--muted)">Проверь: 1) доступ к таблице «Все, у кого есть ссылка» → «Читатель»; '
-          + '2) в таблице есть строка со словами Товар, Категория, Цена, Остаток.</p>'
+          + '2) в таблице есть строка заголовков с колонками Продукт, Категория, Цена, stock_status, stock_label.</p>'
           + '</td></tr>';
       }
     }
