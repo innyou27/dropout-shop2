@@ -13,7 +13,6 @@
       --text: #ffffff;
       --muted: #a1a6b4;
       --accent: #ff2e71;
-      --accent-hover: #fb71ad;
       --highlight: #8b5cf6;
       --glow-accent: rgba(255, 46, 113, 0.4);
     }
@@ -29,7 +28,6 @@
     a { text-decoration: none; color: inherit; }
     .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
 
-    /* --- ANIMATIONS --- */
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
@@ -43,8 +41,8 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
     }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* --- HEADER --- */
     .site-header {
       background-color: rgba(5, 5, 5, 0.95);
       backdrop-filter: blur(10px);
@@ -78,14 +76,9 @@
       transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     .logo:hover { transform: scale(1.05); }
-    .logo span { color: var(--accent); } 
-    .nav-menu {
-      display: flex;
-      list-style: none;
-      gap: 2.5rem;
-      margin: 0;
-      padding: 0;
-    }
+    .logo span { color: var(--accent); }
+
+    .nav-menu { display: flex; list-style: none; gap: 2.5rem; margin: 0; padding: 0; }
     .nav-link {
       color: var(--muted);
       font-size: 0.95rem;
@@ -108,7 +101,6 @@
     }
     .nav-link:hover::after { width: 100%; }
 
-    /* --- HERO --- */
     .hero {
       padding: 6rem 0; text-align: center;
       position: relative; overflow: hidden;
@@ -130,55 +122,34 @@
       animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.3s;
     }
     .hero p {
-        color: var(--muted);
-        max-width: 600px;
-        margin: 0 auto 3rem auto;
-        opacity: 0;
-        animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.6s;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto 3rem auto;
+      opacity: 0;
+      animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.6s;
     }
 
-    /* --- TABLE STYLES --- */
     .table-wrapper {
       overflow-x: auto; border-radius: 16px;
       border: 1px solid var(--border);
       background: var(--glass);
-      padding: 1px;
       position: relative;
     }
-    .table-wrapper::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(255,255,255,0.01);
-      backdrop-filter: blur(10px);
-      z-index: 1;
-      pointer-events: none;
-    }
-    table { width: 100%; border-collapse: collapse; z-index: 2; position: relative; }
+    table { width: 100%; border-collapse: collapse; position: relative; }
     th, td { padding: 1.2rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
     th { color: var(--muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em; }
     tr:last-child td { border-bottom: none; }
-    
+
     .table-row-item {
       opacity: 0;
       transform: translateY(20px);
       animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-    /* Динамические задержки через JS будут перезаписывать эти, но оставим для фоллаба */
-    .table-row-item:nth-child(2) { animation-delay: 0.1s; }
-    .table-row-item:nth-child(3) { animation-delay: 0.2s; }
-    .table-row-item:nth-child(4) { animation-delay: 0.3s; }
-    .table-row-item:nth-child(5) { animation-delay: 0.4s; }
-    .table-row-item:nth-child(6) { animation-delay: 0.5s; }
-    .table-row-item:nth-child(7) { animation-delay: 0.6s; }
-    .table-row-item:nth-child(8) { animation-delay: 0.7s; }
-    .table-row-item:nth-child(9) { animation-delay: 0.8s; }
 
     .status-badge {
       padding: 0.3rem 0.8rem; border-radius: 99px;
-      font-size: 0.75rem; font-weight: 600; color: white;
-      position: relative;
-      z-index: 2;
+      font-size: 0.75rem; font-weight: 600;
+      display: inline-block;
     }
     .status-in { background: rgba(34, 197, 94, 0.2); color: #22c55e; border: 1px solid rgba(34,197,94,0.4); }
     .status-low { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245,158,11,0.4); }
@@ -196,8 +167,6 @@
       transition: all 0.3s ease;
       text-align: center;
       min-width: 120px;
-      position: relative;
-      overflow: hidden;
     }
     .book-btn:hover {
       background: rgba(255, 46, 113, 0.1);
@@ -206,13 +175,8 @@
       box-shadow: 0 0 15px var(--glow-accent);
       transform: scale(1.02);
     }
-    .book-btn:active { transform: scale(0.98); }
 
-    .cat-header-row {
-      background: rgba(255,255,255,0.02);
-      cursor: default;
-      box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset;
-    }
+    .cat-header-row { background: rgba(255,255,255,0.02); cursor: default; }
     .cat-header-row td {
       color: var(--muted);
       font-weight: 700;
@@ -224,17 +188,16 @@
       padding-bottom: 1.5rem;
     }
 
-    /* --- SECTIONS --- */
     .section-padding { padding: 4rem 0; }
     .container-grid {
-      display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.5rem;
     }
     .card {
-      background: rgba(255,255,255,0.03); 
-      padding: 2rem; 
-      border-radius: 16px; 
+      background: rgba(255,255,255,0.03);
+      padding: 2rem;
+      border-radius: 16px;
       border: 1px solid rgba(255,255,255,0.1);
       opacity: 0;
       transform: translateY(30px);
@@ -273,19 +236,8 @@
       color: var(--accent);
       text-transform: uppercase;
       letter-spacing: 1px;
-      position: relative;
       display: inline-block;
     }
-    .section-title-small::after {
-      content: "";
-      position: absolute;
-      bottom: -5px; left: 0;
-      width: 40px;
-      height: 2px;
-      background: var(--accent);
-      animation: pulseGlow 2s infinite;
-    }
-
     .pickup-list {
       list-style: none;
       text-align: left;
@@ -297,20 +249,12 @@
       padding-left: 1.2rem;
       position: relative;
       color: var(--muted);
-      opacity: 0;
-      animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-    .pickup-list li:nth-child(1) { animation-delay: 0.1s; }
-    .pickup-list li:nth-child(2) { animation-delay: 0.2s; }
-    .pickup-list li:nth-child(3) { animation-delay: 0.3s; }
-    .pickup-list li:nth-child(4) { animation-delay: 0.4s; }
-
     .pickup-list li::before {
       content: "📍";
       position: absolute;
       left: 0;
       top: 0;
-      color: var(--accent);
       animation: float 4s ease-in-out infinite;
     }
 
@@ -322,7 +266,6 @@
       margin-bottom: 2rem;
       text-align: left;
       color: var(--muted);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
     .work-hours {
       font-weight: 700;
@@ -335,7 +278,6 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 0.75rem;
       padding: 1rem 2rem;
       background: transparent;
       color: var(--accent);
@@ -344,8 +286,6 @@
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
     }
     .manager-btn:hover {
       background: rgba(255, 46, 113, 0.1);
@@ -354,15 +294,6 @@
       box-shadow: 0 0 15px var(--glow-accent);
       transform: scale(1.02);
     }
-    .manager-btn::after {
-      content: "";
-      position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      transition: left 0.5s ease;
-    }
-    .manager-btn:hover::after { left: 100%; }
 
     footer {
       background: #05060a; padding: 3rem 0; border-top: 1px solid var(--border); text-align: center;
@@ -373,16 +304,6 @@
     .legal-text { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
     .copyright { font-size: 0.85rem; color: var(--muted); margin-top: 1rem; }
 
-    /* --- LOADER & ERROR STATES --- */
-    #table-body-container {
-      min-height: 300px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      color: var(--muted);
-    }
     .loader {
       width: 40px;
       height: 40px;
@@ -390,21 +311,19 @@
       border-top-color: var(--accent);
       border-radius: 50%;
       animation: spin 1s linear infinite;
+      margin: 0 auto 1rem auto;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
 
     @media (max-width: 768px) {
       .hero h1 { font-size: 3.2rem; }
       .table-wrapper { overflow-x: scroll; }
       .nav-menu { gap: 1.5rem; }
-      .cat-header-row td { padding: 1rem; }
       .book-btn { min-width: 100%; }
     }
   </style>
 </head>
 <body>
 
-  <!-- HEADER -->
   <header class="site-header" id="header">
     <div class="header-container">
       <div class="logo" id="reload-site">
@@ -421,13 +340,11 @@
   </header>
 
   <main>
-    <!-- HERO -->
     <section class="hero">
       <h1>DROP OUT<br>Твой уровень.</h1>
       <p>Мы не просто магазин — мы точка входа в культуру. Здесь ты видишь реальное наличие, бронируешь и забираешь в офлайне.</p>
     </section>
 
-    <!-- ABOUT -->
     <section id="about" class="section-padding">
       <div class="container">
         <h2 style="margin-bottom: 2rem;">Кто мы такие</h2>
@@ -454,7 +371,6 @@
       </div>
     </section>
 
-    <!-- НАЛИЧИЕ (ТАБЛИЦА) -->
     <section id="availability" class="section-padding">
       <div class="container">
         <h2 style="margin-bottom: 2rem;">Наличие</h2>
@@ -470,11 +386,10 @@
               </tr>
             </thead>
             <tbody id="table-body-container">
-              <!-- Сюда JS вставит товары -->
               <tr>
                 <td colspan="5" style="text-align:center; padding: 3rem;">
                   <div class="loader"></div>
-                  <p>Загрузка товаров...</p>
+                  <p style="color:var(--muted)">Загрузка товаров...</p>
                 </td>
               </tr>
             </tbody>
@@ -483,7 +398,6 @@
       </div>
     </section>
 
-    <!-- САМОВЫВОЗ И ВСТРЕЧИ -->
     <section id="pickup" class="section-padding">
       <div class="container">
         <h2 style="margin-bottom: 2rem;">Самовывоз и встречи</h2>
@@ -525,23 +439,21 @@
 
   <script>
     // ================= НАСТРОЙКИ =================
-    // Вставь сюда ID своей Google Таблицы (между /d/ и /edit в URL)
-    const SHEET_ID = '18pK7Vgne5cFrCq2CARCwNB2_vsxdE4ybQd8XQJLsLt0'; 
+    const SHEET_ID = '18pK7Vgne5cFrCq2CARCwNB2_vsxdE4ybQd8XQJLsLt0';
     // =============================================
 
-    // 1. Логика перезагрузки сайта по клику на логотип
+    // Перезагрузка по клику на логотип
     document.getElementById('reload-site').addEventListener('click', () => {
       location.reload();
     });
 
-    // 2. Логика отправки в Telegram
+    // Бронирование в Telegram
     function sendToTg(name, price) {
-      const message = `🛒 *Хочу забронировать:*\n\n• ${name}\n💰 Цена: ${price} ₽\n\n📩 Жду подтверждения от менеджера.`;
-      const encodedMessage = encodeURIComponent(message);
-      window.open(`https://t.me/DropoutManager?text=\${encodedMessage}`, '_blank');
+      const message = '🛒 Хочу забронировать:\n\n• ' + name + '\n💰 Цена: ' + price + ' ₽\n\n📩 Жду подтверждения от менеджера.';
+      window.open('https://t.me/DropoutManager?text=' + encodeURIComponent(message), '_blank');
     }
 
-    // 3. Эффект прилипания хедера (тень при скролле)
+    // Тень хедера при скролле
     const header = document.getElementById('header');
     window.addEventListener('scroll', () => {
       if (window.scrollY > 50) {
@@ -551,73 +463,123 @@
       }
     });
 
-    // 4. ЛОГИКА ЗАГРУЗКИ ТОВАРОВ ИЗ GOOGLE SHEETS
+    // Разбор CSV (понимает кавычки и запятые внутри текста)
+    function parseCSV(text) {
+      const rows = [];
+      let row = [], cur = '', inQuotes = false;
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        if (inQuotes) {
+          if (ch === '"') {
+            if (text[i + 1] === '"') { cur += '"'; i++; }
+            else { inQuotes = false; }
+          } else {
+            cur += ch;
+          }
+        } else {
+          if (ch === '"') { inQuotes = true; }
+          else if (ch === ',') { row.push(cur); cur = ''; }
+          else if (ch === '\n') { row.push(cur); rows.push(row); row = []; cur = ''; }
+          else if (ch !== '\r') { cur += ch; }
+        }
+      }
+      if (cur !== '' || row.length > 0) { row.push(cur); rows.push(row); }
+      return rows;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     async function loadProducts() {
       const container = document.getElementById('table-body-container');
-      
+      const url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:csv';
+
       try {
-        // Формируем URL для публичного экспорта CSV из Google Sheets (вкладка "Лист1")
-        const url = `https://docs.google.com/spreadsheets/d/\${SHEET_ID}/gviz/tq?tqx=out:csv`;
-        
         const response = await fetch(url);
-        
-        if (!response.ok) throw new Error('Ошибка сети или доступа к таблице');
-        
+        if (!response.ok) {
+          throw new Error('HTTP ' + response.status);
+        }
+
         const text = await response.text();
-        const lines = text.split('\n').slice(1); // Пропускаем первую строку (заголовки)
-        
+        const allRows = parseCSV(text);
+        if (allRows.length === 0) throw new Error('Таблица пустая');
+
+        // Ищем строку заголовков (с словам "Товар")
+        let headerRowIndex = -1;
+        for (let i = 0; i < Math.min(allRows.length, 5); i++) {
+          if (allRows[i].join(' ').toLowerCase().includes('товар')) {
+            headerRowIndex = i;
+            break;
+          }
+        }
+        if (headerRowIndex === -1) throw new Error('Не найдена строка заголовков');
+
+        const headerRow = allRows[headerRowIndex].map(function(h) { return h.trim().toLowerCase(); });
+
+        // Находим колонки по названиям (работает даже с пустой колонкой A)
+        const idxProduct = headerRow.findIndex(function(h) { return h.includes('товар'); });
+        const idxCategory = headerRow.findIndex(function(h) { return h.includes('катег'); });
+        const idxPrice = headerRow.findIndex(function(h) { return h.includes('цена'); });
+        const idxStock = headerRow.findIndex(function(h) { return h.includes('остат'); });
+
+        if (idxProduct === -1 || idxPrice === -1) {
+          throw new Error('Не найдены колонки "Товар" или "Цена"');
+        }
+
+        const dataRows = allRows.slice(headerRowIndex + 1);
         let html = '';
-        let rowIndex = 0;
+        let lastCategory = null;
+        let delay = 0;
 
-        lines.forEach(line => {
-          // Разбиваем строку CSV. Учитываем, что в названиях товаров могут быть запятые, 
-          // но для простоты берем первые 5 колонок. Если структура сложнее, нужен парсер CSV.
-          const cols = line.split(',');
-          if (cols.length < 5) return; 
+        dataRows.forEach(function(row) {
+          const product = (row[idxProduct] || '').trim();
+          if (product === '') return; // пропускаем пустые строки
 
-          const product = cols;
-          const category = cols;
-          const price = cols;
-          const stockStatus = cols; // 'in' или 'low'
-          const stockLabel = cols;  // Текст для бейджа
+          const category = idxCategory !== -1 ? (row[idxCategory] || '').trim() : '';
+          const priceRaw = (row[idxPrice] || '').trim();
+          const stockText = idxStock !== -1 ? (row[idxStock] || '').trim() : 'Много';
 
-          // Определяем класс статуса
-          const statusClass = stockStatus === 'in' ? 'status-in' : 'status-low';
-          
-          // Генерируем строку таблицы
-          html += `
-            <tr class="table-row-item" style="animation-delay: \${rowIndex * 0.1}s;">
-              <td>\${product}</td>
-              <td>\${category}</td>
-              <td>\${price} ₽</td>
-              <td><span class="status-badge ${statusClass}">${stockLabel}</span></td>
-              <td><button class="book-btn" onclick="sendToTg('${product}', ${price})">Забронировать</button></td>
-            </tr>
-          `;
-          rowIndex++;
+          const price = parseFloat(priceRaw.replace(/[^0-9.,]/g, '').replace(',', '.')) || 0;
+          const isLow = stockText.toLowerCase().includes('мало');
+          const statusClass = isLow ? 'status-low' : 'status-in';
+          const priceFormatted = price.toLocaleString('ru-RU');
+
+          // Строка-разделитель категории (как в старом дизайне)
+          if (category && category !== lastCategory) {
+            html += '<tr class="cat-header-row"><td colspan="5">' + escapeHtml(category) + '</td></tr>';
+            lastCategory = category;
+          }
+
+          html += '<tr class="table-row-item" style="animation-delay: ' + (delay * 0.1).toFixed(1) + 's;">'
+            + '<td>' + escapeHtml(product) + '</td>'
+            + '<td>' + escapeHtml(category) + '</td>'
+            + '<td>' + priceFormatted + ' ₽</td>'
+            + '<td><span class="status-badge ' + statusClass + '">' + escapeHtml(stockText) + '</span></td>'
+            + '<td><button class="book-btn" onclick="sendToTg(\'' + escapeHtml(product).replace(/'/g, "\\'") + '\', ' + price + ')">Забронировать</button></td>'
+            + '</tr>';
+
+          delay++;
         });
 
         if (html === '') {
-          container.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 3rem; color:var(--muted)">Товары не найдены. Проверьте структуру таблицы.</td></tr>';
+          container.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:3rem; color:var(--muted)">В таблице нет товаров. Добавь их в Google Таблицу под строкой заголовков.</td></tr>';
         } else {
           container.innerHTML = html;
         }
 
       } catch (error) {
-        console.error(error);
-        container.innerHTML = `
-          <tr>
-            <td colspan="5" style="text-align:center; padding: 3rem; color:var(--accent)">
-              <h3>Ошибка загрузки товаров</h3>
-              <p style="color:var(--muted); margin-top: 10px;">
-                Не удалось загрузить данные из Google Таблицы.<br>
-                1. Проверьте ID таблицы в коде (переменная SHEET_ID).<br>
-                2. Убедитесь, что доступ к таблице открыт для всех по ссылке ("Читатель").<br>
-                3. Проверьте, что первая вкладка называется "Лист1" и имеет нужные колонки.
-              </p>
-            </td>
-          </tr>
-        `;
+        console.error('Ошибка загрузки:', error);
+        container.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:3rem;">'
+          + '<h3 style="color:var(--accent); margin-bottom:10px;">Ошибка загрузки товаров</h3>'
+          + '<p style="color:var(--muted)">Проверь: 1) доступ к таблице «Все, у кого есть ссылка» → «Читатель»; '
+          + '2) в таблице есть строка со словами Товар, Категория, Цена, Остаток.</p>'
+          + '</td></tr>';
       }
     }
 
